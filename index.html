@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerald Boosting</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1120;color:#f8fafc;font-family:Arial,sans-serif}
+header{background:#111c32;padding:20px;border-bottom:1px solid #26344d}
+.brand{font-size:21px;font-weight:bold;color:#60a5fa}
+header p{color:#94a3b8;font-size:12px}
+main{padding:18px;max-width:700px;margin:auto}
+h2{font-size:19px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:#16233a;padding:17px;border-radius:13px;margin-bottom:15px;border:1px solid #273955}
+.small{color:#94a3b8;font-size:12px}
+.number{font-size:25px;font-weight:bold;margin-top:8px}
+button{background:#2563eb;color:white;border:0;padding:13px;border-radius:9px;font-weight:bold;cursor:pointer}
+button:active{opacity:.8}
+input,select,textarea{width:100%;padding:13px;margin:8px 0 15px;background:#0b1425;color:white;border:1px solid #34445e;border-radius:8px}
+label{font-size:13px;color:#cbd5e1}
+.full{width:100%}
+nav{display:flex;gap:8px;overflow:auto;margin:18px 0}
+nav button{white-space:nowrap;background:#1e293b}
+nav button.active{background:#2563eb}
+.order{border-bottom:1px solid #34445e;padding:12px 0;font-size:13px}
+footer{text-align:center;color:#64748b;padding:25px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">⚡ GERALD BOOSTING</div>
+<p>Social Media Promotion Dashboard</p>
+</header>
+
+<main>
+<h2>Welcome to Gerald Boosting!</h2>
+<p class="small">Manage your social media promotion requests.</p>
+
+<div class="stats">
+<div class="card">
+<div class="small">Total Orders</div>
+<div class="number" id="total">0</div>
+</div>
+<div class="card">
+<div class="small">Demo Balance</div>
+<div class="number">₱0.00</div>
+</div>
+</div>
+
+<nav>
+<button class="active" onclick="showTab('dashboard',this)">Dashboard</button>
+<button onclick="showTab('neworder',this)">New Request</button>
+<button onclick="showTab('history',this)">History</button>
+</nav>
+
+<section id="dashboard">
+<div class="card">
+<h2>Available Categories</h2>
+<p>🔵 Facebook promotion</p>
+<p>🎵 TikTok promotion</p>
+<p>🎨 Social media content design</p>
+<p>📈 Organic growth consultation</p>
+</div>
+<div class="card">
+<h2>How it works</h2>
+<p class="small">Choose a service, provide your public profile or post link, and submit your request. These are demo requests, not automatic follower delivery.</p>
+</div>
+</section>
+
+<section id="neworder" hidden>
+<div class="card">
+<h2>Create New Request</h2>
+<form id="orderForm">
+<label>Platform</label>
+<select id="platform" required>
+<option value="">Select platform</option>
+<option>Facebook</option>
+<option>TikTok</option>
+</select>
+
+<label>Service</label>
+<select id="service" required>
+<option value="">Choose a service</option>
+<option>Organic growth consultation</option>
+<option>Content strategy</option>
+<option>Post design request</option>
+<option>Profile optimization</option>
+</select>
+
+<label>Public Profile or Post Link</label>
+<input id="link" type="url" placeholder="https://..." required>
+
+<label>Additional Details</label>
+<textarea id="details" rows="3" placeholder="Describe what you need"></textarea>
+
+<button class="full" type="submit">SUBMIT REQUEST</button>
+</form>
+</div>
+</section>
+
+<section id="history" hidden>
+<div class="card">
+<h2>Order History</h2>
+<div id="orders"><p class="small">No requests yet.</p></div>
+</div>
+</section>
+
+</main>
+
+<footer>
+GERALD BOOSTING © 2026<br>
+Independent social media promotion service
+</footer>
+
+<script>
+let orders=JSON.parse(localStorage.getItem("geraldOrders")||"[]");
+
+function update(){
+document.getElementById("total").textContent=orders.length;
+document.getElementById("orders").innerHTML=orders.length?
+orders.map((o,i)=>`
+<div class="order">
+<b>Request #${i+1}</b><br>
+${o.platform} — ${o.service}<br>
+<a href="${o.link}" target="_blank" style="color:#60a5fa">View link</a><br>
+<span class="small">Status: Pending review</span>
+</div>`).join(""):'<p class="small">No requests yet.</p>';
+}
+function showTab(id,btn){
+["dashboard","neworder","history"].forEach(x=>{
+document.getElementById(x).hidden=x!==id;
+});
+document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+}
+document.getElementById("orderForm").addEventListener("submit",function(e){
+e.preventDefault();
+orders.push({
+platform:document.getElementById("platform").value,
+service:document.getElementById("service").value,
+link:document.getElementById("link").value,
+details:document.getElementById("details").value
+});
+localStorage.setItem("geraldOrders",JSON.stringify(orders));
+update();
+this.reset();
+alert("Request saved on this device!");
+});
+update();
+</script>
+</body>
+</html>
